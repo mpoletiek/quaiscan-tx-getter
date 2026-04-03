@@ -1,6 +1,6 @@
 # quaiscan-tx-getter
 
-Export all transactions for a Quai wallet address to CSV using the [Quaiscan](https://quaiscan.io) (Blockscout) API.
+Export all transactions for Quai or Qi wallet addresses to CSV using the [Quaiscan](https://quaiscan.io) (Blockscout) API. Supports both token types in Quai's dual-token system.
 
 ## Requirements
 
@@ -14,7 +14,7 @@ No dependencies to install — the app uses only Node.js built-ins.
 node index.js <address1> [address2] [address3] ...
 ```
 
-Each address produces its own `<address>_transactions.csv` file in the current directory.
+Each address produces its own `<address>_transactions_<timestamp>.csv` file in the current directory. Both Quai and Qi addresses are supported and can be mixed freely.
 
 ### Examples
 
@@ -22,8 +22,8 @@ Each address produces its own `<address>_transactions.csv` file in the current d
 # Single address
 node index.js 0x0006506bDE7140b85DED58a40D7444F84cde4821
 
-# Multiple addresses
-node index.js 0x0006506bDE7140b85DED58a40D7444F84cde4821 0x001aD2bC5e07609E39cfcF907F01490E1C3030c4
+# Multiple addresses (Quai and Qi can be mixed)
+node index.js 0x0006506bDE7140b85DED58a40D7444F84cde4821 0x00971b7c48EcbF6ba4C9A7a0d1B84E6E34814dd4
 ```
 
 ## Configuration
@@ -51,7 +51,8 @@ Any Blockscout-based explorer should work as long as it exposes the v2 API.
 | Timestamp | UTC date/time (`YYYY-MM-DD HH:MM:SS UTC`) |
 | From | Sender address |
 | To | Recipient address |
-| Value (QUAI) | Transfer value converted from wei |
+| Value | Transfer value (18 decimals for QUAI, 3 decimals for QI) |
+| Currency | `QUAI` or `QI` |
 | Direction | `IN` if the wallet is the recipient, `OUT` otherwise |
 | GasLimit | Gas limit set for the transaction |
 | GasUsed | Actual gas consumed |
