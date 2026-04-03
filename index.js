@@ -92,11 +92,12 @@ async function fetchAllTransactions(address) {
   return allTxs;
 }
 
-function weiToQuai(wei) {
-  if (!wei || wei === "0") return "0";
-  const str = wei.padStart(19, "0");
-  const intPart = str.slice(0, str.length - 18) || "0";
-  const decPart = str.slice(str.length - 18).replace(/0+$/, "");
+function convertValue(raw, currency) {
+  if (!raw || raw === "0") return "0";
+  const decimals = currency === "qi" ? 3 : 18;
+  const str = raw.padStart(decimals + 1, "0");
+  const intPart = str.slice(0, str.length - decimals) || "0";
+  const decPart = str.slice(str.length - decimals).replace(/0+$/, "");
   return decPart ? `${intPart}.${decPart}` : intPart;
 }
 
@@ -112,6 +113,7 @@ function txToRow(tx, address) {
   const toAddr = tx.to?.hash || "";
   const fromAddr = tx.from?.hash || "";
   const isIncoming = toAddr.toLowerCase() === address.toLowerCase();
+  const currency = tx.from?.currency || tx.to?.currency || "quai";
   const dt = new Date(tx.timestamp);
   const ts = `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, "0")}-${String(dt.getUTCDate()).padStart(2, "0")} ${String(dt.getUTCHours()).padStart(2, "0")}:${String(dt.getUTCMinutes()).padStart(2, "0")}:${String(dt.getUTCSeconds()).padStart(2, "0")} UTC`;
 
@@ -121,7 +123,8 @@ function txToRow(tx, address) {
     ts,
     fromAddr,
     toAddr,
-    weiToQuai(tx.value),
+    convertValue(tx.value, currency),
+    currency.toUpperCase(),
     isIncoming ? "IN" : "OUT",
     tx.gas_limit,
     tx.gas_used,
@@ -139,7 +142,8 @@ function writeCSV(transactions, address, outputPath) {
     "Timestamp",
     "From",
     "To",
-    "Value (QUAI)",
+    "Value",
+    "Currency",
     "Direction",
     "GasLimit",
     "GasUsed",
