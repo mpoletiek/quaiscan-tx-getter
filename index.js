@@ -173,7 +173,9 @@ async function main() {
       continue;
     }
 
-    const outputFile = path.join(process.cwd(), `${address}_transactions.csv`);
+    const now = new Date();
+    const ts = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}_${String(now.getHours()).padStart(2, "0")}${String(now.getMinutes()).padStart(2, "0")}${String(now.getSeconds()).padStart(2, "0")}`;
+    const outputFile = path.join(process.cwd(), `${address}_transactions_${ts}.csv`);
     writeCSV(transactions, address, outputFile);
     console.log(`Exported ${transactions.length} transactions to ${outputFile}\n`);
   }
