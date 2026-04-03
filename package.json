@@ -1,0 +1,10 @@
+{
+  "name": "quaiscan-tx-getter",
+  "version": "1.0.0",
+  "description": "Fetches all transactions for a Quai wallet address and exports to CSV",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {}
+}
